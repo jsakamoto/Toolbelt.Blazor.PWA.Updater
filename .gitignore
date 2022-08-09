@@ -1,0 +1,7 @@
+.vs/
+bin/
+obj/
+*.user
+*.suo
+_dist/*.nupkg
+**/_publish

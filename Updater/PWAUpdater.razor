@@ -1,0 +1,86 @@
+﻿@using Microsoft.Extensions.Logging
+@implements IDisposable
+@inject IWebAssemblyHostEnvironment HostEnvironment
+@inject IPWAUpdaterService PWAUpdaterService
+@inject ILogger<PWAUpdater> Logger
+
+<div class="@("pwa-updater" + (this._Visible ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
+    <span>@this.Text</span>
+    <button @onclick="OnClickUpdateNowAsync" class="pwa-updater-updatenow-button">@this.ButtonCaption</button>
+    <span @onclick="OnClickClose" class="pwa-updater-close-button">✕</span>
+</div>
+
+@code {
+    private bool _Visible = false;
+
+    public enum Aligns
+    {
+        Top,
+        Buttom
+    }
+
+    /// <summary>
+    /// The text that is shown on the notification bar UI.
+    /// </summary>
+    [Parameter]
+    public string? Text { get; set; } = "The new version is ready.";
+
+    /// <summary>
+    /// The text that is shown as the caption of the button to trigger updates.
+    /// </summary>
+    [Parameter]
+    public string? ButtonCaption { get; set; } = "UPDATE NOW";
+
+    /// <summary>
+    /// The value to specify the position of the notification bar, whether <see cref="Aligns.Top"/> or <see cref="Aligns.Buttom"/>. 
+    /// </summary>
+    [Parameter]
+    public Aligns Align { get; set; } = Aligns.Top;
+
+    /// <summary>
+    /// The comma-separated string that specifies environment names that the notification UI should work.<br/>
+    /// The default value is "Production".
+    /// </summary>
+    [Parameter]
+    public string? EnvironmentsForWork { get; set; } = "Production";
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this.PWAUpdaterService.NextVersionIsWaiting += PWAUpdaterService_NextVersionIsWaiting;
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        this.PWAUpdaterService.NextVersionIsWaiting -= PWAUpdaterService_NextVersionIsWaiting;
+    }
+
+    private void PWAUpdaterService_NextVersionIsWaiting(object? sender, EventArgs args)
+    {
+        var environments = this.EnvironmentsForWork?.Split(',').Select(s => s.Trim()).Where(s => s != "") ?? Enumerable.Empty<string>();
+        if (!environments.Contains(this.HostEnvironment.Environment) && environments.Any())
+        {
+            return;
+        }
+        this._Visible = true;
+        this.InvokeAsync(() => this.StateHasChanged()).ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+            {
+                this.Logger.LogError(t.Exception, t.Exception?.Message);
+            }
+        });
+    }
+
+    private async Task OnClickUpdateNowAsync()
+    {
+        await this.PWAUpdaterService.SkipWaitingAsync();
+    }
+
+    private void OnClickClose()
+    {
+        this._Visible = false;
+    }
+}
