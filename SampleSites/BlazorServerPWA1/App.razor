@@ -1,4 +1,27 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@implements IDisposable
+@inject IPWAUpdaterService PWAUpdaterService
+@inject ILogger<App> Logger
+
+@if (_Visible)
+{
+    <div style="position:fixed;
+        z-index:100;
+        padding:8px;
+        left:0;
+        right:0;
+        top:0;
+        background-color:darkorange;
+        color:white;">
+        <span>The new version is ready.</span>
+        <span>
+            <button @onclick="OnClickUpdateNowAsync" class="btn btn-outline-primary btn-sm">
+                Update Now
+            </button>
+        </span>
+    </div>
+}
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -10,3 +33,38 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code
+{
+    private bool _Visible = false;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this.PWAUpdaterService.NextVersionIsWaiting += PWAUpdaterService_NextVersionIsWaiting;
+        }
+    }
+
+    private void PWAUpdaterService_NextVersionIsWaiting(object? sender, EventArgs args)
+    {
+        this._Visible = true;
+        this.InvokeAsync(() => this.StateHasChanged()).ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+            {
+                this.Logger.LogError(t.Exception, t.Exception?.Message);
+            }
+        });
+    }
+
+    private async Task OnClickUpdateNowAsync()
+    {
+        await this.PWAUpdaterService.SkipWaitingAsync();
+    }
+
+    public void Dispose()
+    {
+        this.PWAUpdaterService.NextVersionIsWaiting -= PWAUpdaterService_NextVersionIsWaiting;
+    }
+}
