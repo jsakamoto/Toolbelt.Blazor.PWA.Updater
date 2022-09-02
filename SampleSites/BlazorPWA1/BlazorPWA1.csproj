@@ -14,12 +14,12 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorWasmPreRendering.Build" Version="1.0.0-preview.26.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Toolbelt.Blazor.PWA.Updater" Version="0.0.2" />
+    <PackageReference Include="Toolbelt.Blazor.PWA.Updater" Version="2.0.0" />
     <!--<ProjectReference Include="..\..\Updater\Toolbelt.Blazor.PWA.Updater.csproj" />-->
   </ItemGroup>
 

@@ -1,2 +1,5 @@
+v.2.0.0
+- Add support for Blazor Server
+
 v.1.0.0
 - 1st release.

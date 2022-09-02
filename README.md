@@ -6,6 +6,10 @@ Provide "Update Now" UI and feature to your Blazor PWA that appears when the nex
 
 ![](https://raw.githubusercontent.com/jsakamoto/Toolbelt.Blazor.PWA.Updater/main/.assets/fig.001.png)
 
+### Supported platforms
+
+.NET 6 or later. Both Blazor Server and Blazor Assembly are supported.
+
 ## 🤔 Backgrounds
 
 Typically, a service worker of PWA is never updated even when updated contents have been deployed to a server, even if you reload the page of that PWA. After the user has navigated away from the PWA in all tabs, updates will complete. This is not specific to Blazor, but rather is a standard web platform behavior.
