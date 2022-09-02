@@ -23,7 +23,13 @@
     <PackageIcon>nupkg-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
- 
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Toolbelt.Blazor.PWA.Updater.Test</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
   <ItemGroup>
     <SupportedPlatform Include="browser" />
     <None Include="..\.assets\nupkg-icon.png" Visible="false" Pack="true" PackagePath="\" />
