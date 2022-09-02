@@ -1,6 +1,5 @@
 ﻿@using Microsoft.Extensions.Logging
 @implements IDisposable
-@inject IWebAssemblyHostEnvironment HostEnvironment
 @inject IPWAUpdaterService PWAUpdaterService
 @inject ILogger<PWAUpdater> Logger
 
@@ -60,7 +59,7 @@
     private void PWAUpdaterService_NextVersionIsWaiting(object? sender, EventArgs args)
     {
         var environments = this.EnvironmentsForWork?.Split(',').Select(s => s.Trim()).Where(s => s != "") ?? Enumerable.Empty<string>();
-        if (!environments.Contains(this.HostEnvironment.Environment) && environments.Any())
+        if (!environments.Contains(this.PWAUpdaterService.HostEnvironment) && environments.Any())
         {
             return;
         }

@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4AFE62BA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbelt.Blazor.PWA.Updater.Test", "Tests\Updater\Toolbelt.Blazor.PWA.Updater.Test.csproj", "{D6714746-D2C3-4F7A-84F0-494754FB92B8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerPWA1", "SampleSites\BlazorServerPWA1\BlazorServerPWA1.csproj", "{5C6FFCA4-5D5A-4CC6-96A0-9EFE9476C9A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{D6714746-D2C3-4F7A-84F0-494754FB92B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6714746-D2C3-4F7A-84F0-494754FB92B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6714746-D2C3-4F7A-84F0-494754FB92B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C6FFCA4-5D5A-4CC6-96A0-9EFE9476C9A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C6FFCA4-5D5A-4CC6-96A0-9EFE9476C9A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C6FFCA4-5D5A-4CC6-96A0-9EFE9476C9A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C6FFCA4-5D5A-4CC6-96A0-9EFE9476C9A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DEF868EB-3940-4274-BDA1-6A6F856F691D} = {F357187D-7FF3-4232-8AE7-26AD4B0A2B3A}
 		{D6714746-D2C3-4F7A-84F0-494754FB92B8} = {4AFE62BA-B21B-427A-BBE9-71098E3D787F}
+		{5C6FFCA4-5D5A-4CC6-96A0-9EFE9476C9A0} = {F357187D-7FF3-4232-8AE7-26AD4B0A2B3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D72AB7CF-D69B-4740-A14E-1E202B0C5536}

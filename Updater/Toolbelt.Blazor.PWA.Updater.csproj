@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <Copyright>Copyright © 2022 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.PWA.Updater/</PackageProjectUrl>
@@ -34,10 +34,6 @@
     <None Update="PWAUpdater.razor.css" CssScope="b-pwa-updater" />
   </ItemGroup>
   
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Updater.Service\Toolbelt.Blazor.PWA.Updater.Service.csproj" />
   </ItemGroup>
