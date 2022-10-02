@@ -3,14 +3,25 @@
 @inject IPWAUpdaterService PWAUpdaterService
 @inject ILogger<PWAUpdater> Logger
 
-<div class="@("pwa-updater" + (this._Visible ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
-    <span>@this.Text</span>
-    <button @onclick="OnClickUpdateNowAsync" class="pwa-updater-updatenow-button">@this.ButtonCaption</button>
-    <span @onclick="OnClickClose" class="pwa-updater-close-button">✕</span>
-</div>
+@if (this._State != States.Hidden)
+{
+    <div class="@("pwa-updater" + (this._State == States.Shown ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
+        <span>@this.Text</span>
+        <button @onclick="OnClickUpdateNowAsync" class="pwa-updater-updatenow-button">@this.ButtonCaption</button>
+        <span @onclick="OnClickClose" class="pwa-updater-close-button">✕</span>
+    </div>
+}
 
 @code {
-    private bool _Visible = false;
+    private enum States
+    {
+        Hidden,
+        Showing,
+        Shown,
+        Hiding
+    }
+
+    private States _State = States.Hidden;
 
     public enum Aligns
     {
@@ -31,7 +42,7 @@
     public string? ButtonCaption { get; set; } = "UPDATE NOW";
 
     /// <summary>
-    /// The value to specify the position of the notification bar, whether <see cref="Aligns.Top"/> or <see cref="Aligns.Buttom"/>. 
+    /// The value to specify the position of the notification bar, whether <see cref="Aligns.Top"/> or <see cref="Aligns.Buttom"/>.
     /// </summary>
     [Parameter]
     public Aligns Align { get; set; } = Aligns.Top;
@@ -43,11 +54,21 @@
     [Parameter]
     public string? EnvironmentsForWork { get; set; } = "Production";
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             this.PWAUpdaterService.NextVersionIsWaiting += PWAUpdaterService_NextVersionIsWaiting;
+        }
+
+        if (this._State == States.Showing)
+        {
+            await Task.Delay(200);
+            if (this._State == States.Showing)
+            {
+                this._State = States.Shown;
+                this.StateHasChanged();
+            }
         }
     }
 
@@ -63,14 +84,19 @@
         {
             return;
         }
-        this._Visible = true;
-        this.InvokeAsync(() => this.StateHasChanged()).ContinueWith(t =>
+
+        if (this._State is States.Hidden or States.Hiding)
         {
-            if (t.IsFaulted)
+            this._State = States.Showing;
+
+            this.InvokeAsync(() => this.StateHasChanged()).ContinueWith(t =>
             {
-                this.Logger.LogError(t.Exception, t.Exception?.Message);
-            }
-        });
+                if (t.IsFaulted)
+                {
+                    this.Logger.LogError(t.Exception, t.Exception?.Message);
+                }
+            });
+        }
     }
 
     private async Task OnClickUpdateNowAsync()
@@ -78,8 +104,16 @@
         await this.PWAUpdaterService.SkipWaitingAsync();
     }
 
-    private void OnClickClose()
+    private async Task OnClickClose()
     {
-        this._Visible = false;
+        if (this._State is not States.Hiding and not States.Hidden)
+        {
+            this._State = States.Hiding;
+            await Task.Delay(500);
+            if (this._State == States.Hiding)
+            {
+                this._State = States.Hidden;
+            }
+        }
     }
 }
