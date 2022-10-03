@@ -6,6 +6,7 @@
 @if (this.State != States.Hidden)
 {
     <div class="@("pwa-updater" + (this.State == States.Shown ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
+        @ChildContent
         <span>@this.Text</span>
         <button @onclick="OnClickUpdateNowAsync" class="pwa-updater-updatenow-button">@this.ButtonCaption</button>
         <span @onclick="OnClickClose" class="pwa-updater-close-button">✕</span>
@@ -57,6 +58,9 @@
     /// </summary>
     [Parameter]
     public string? EnvironmentsForWork { get; set; } = "Production";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
