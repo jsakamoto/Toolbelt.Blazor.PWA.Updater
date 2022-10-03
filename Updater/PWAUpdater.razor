@@ -3,9 +3,9 @@
 @inject IPWAUpdaterService PWAUpdaterService
 @inject ILogger<PWAUpdater> Logger
 
-@if (this._State != States.Hidden)
+@if (this.State != States.Hidden)
 {
-    <div class="@("pwa-updater" + (this._State == States.Shown ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
+    <div class="@("pwa-updater" + (this.State == States.Shown ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
         <span>@this.Text</span>
         <button @onclick="OnClickUpdateNowAsync" class="pwa-updater-updatenow-button">@this.ButtonCaption</button>
         <span @onclick="OnClickClose" class="pwa-updater-close-button">✕</span>
@@ -13,7 +13,7 @@
 }
 
 @code {
-    private enum States
+    public enum States
     {
         Hidden,
         Showing,
@@ -21,7 +21,11 @@
         Hiding
     }
 
-    private States _State = States.Hidden;
+    [Parameter]
+    public States State { get; set; } = States.Hidden;
+
+    [Parameter]
+    public EventCallback<States> StateChanged { get; set; }
 
     public enum Aligns
     {
@@ -61,12 +65,24 @@
             this.PWAUpdaterService.NextVersionIsWaiting += PWAUpdaterService_NextVersionIsWaiting;
         }
 
-        if (this._State == States.Showing)
+        if (this.State == States.Showing)
         {
             await Task.Delay(200);
-            if (this._State == States.Showing)
+            if (this.State == States.Showing)
             {
-                this._State = States.Shown;
+                this.State = States.Shown;
+                await this.StateChanged.InvokeAsync(this.State);
+                this.StateHasChanged();
+            }
+        }
+
+        if (this.State == States.Hiding)
+        {
+            await Task.Delay(500);
+            if (this.State == States.Hiding)
+            {
+                this.State = States.Hidden;
+                await this.StateChanged.InvokeAsync(this.State);
                 this.StateHasChanged();
             }
         }
@@ -85,17 +101,22 @@
             return;
         }
 
-        if (this._State is States.Hidden or States.Hiding)
+        this.InvokeAsync(() => this.ShowAsync()).ContinueWith(t =>
         {
-            this._State = States.Showing;
-
-            this.InvokeAsync(() => this.StateHasChanged()).ContinueWith(t =>
+            if (t.IsFaulted)
             {
-                if (t.IsFaulted)
-                {
-                    this.Logger.LogError(t.Exception, t.Exception?.Message);
-                }
-            });
+                this.Logger.LogError(t.Exception, t.Exception?.Message);
+            }
+        });
+    }
+
+    private async Task ShowAsync()
+    {
+        if (this.State is States.Hidden or States.Hiding)
+        {
+            this.State = States.Showing;
+            await this.StateChanged.InvokeAsync(this.State);
+            this.StateHasChanged();
         }
     }
 
@@ -106,14 +127,10 @@
 
     private async Task OnClickClose()
     {
-        if (this._State is not States.Hiding and not States.Hidden)
+        if (this.State is not States.Hiding and not States.Hidden)
         {
-            this._State = States.Hiding;
-            await Task.Delay(500);
-            if (this._State == States.Hiding)
-            {
-                this._State = States.Hidden;
-            }
+            this.State = States.Hiding;
+            await this.StateChanged.InvokeAsync(this.State);
         }
     }
 }
