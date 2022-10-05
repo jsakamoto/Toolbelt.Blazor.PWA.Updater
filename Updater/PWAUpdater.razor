@@ -14,6 +14,10 @@
 }
 
 @code {
+
+    /// <summary>
+    /// The state of visibility of the PWAUpdater component.
+    /// </summary>
     public enum States
     {
         Hidden,
@@ -22,12 +26,23 @@
         Hiding
     }
 
+    /// <summary>
+    /// Gets or sets the current state of visibility of the component.<br/>
+    /// You can set this property from <see cref="States.Shown"/> to <see cref="States.Hiding"/> to be hidden from outside of the component when the component was being appeared.<br/>
+    /// And for the other purpose, you can also set this property to <see cref="States.Showing"/> explicitly to be visible forcibly for the purpose of developing custom looks &amp; feels, even when the next version of the service worker does not exist.
+    /// </summary>
     [Parameter]
     public States State { get; set; } = States.Hidden;
 
+    /// <summary>
+    /// Gets or sets the event callback that will be invoked when the <see cref="State"/> property value changes.
+    /// </summary>
     [Parameter]
     public EventCallback<States> StateChanged { get; set; }
 
+    /// <summary>
+    /// The position to be placed the PWAUpdater component on the page.
+    /// </summary>
     public enum Aligns
     {
         Top,
@@ -59,6 +74,9 @@
     [Parameter]
     public string? EnvironmentsForWork { get; set; } = "Production";
 
+    /// <summary>
+    /// Gets or sets the content to be rendered as a part of the PWAUpdate component.
+    /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
