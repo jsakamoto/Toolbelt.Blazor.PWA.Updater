@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>2.1.0-preview.1</Version>
+    <Version>2.1.0</Version>
     <Copyright>Copyright © 2022 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.PWA.Updater/</PackageProjectUrl>

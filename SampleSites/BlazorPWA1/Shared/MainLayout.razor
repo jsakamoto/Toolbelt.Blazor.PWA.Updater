@@ -1,10 +1,23 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inherits LayoutComponentBase
+@inject IWebAssemblyHostEnvironment HostEnv
 
-<PWAUpdater />
+<PWAUpdater @bind-State="_InitialState">
+    <a href="https://blazor.net" target="_blank"
+       style="color: var(--pwa-updater-bar-color); margin-left: 26px; flex: 1">
+        about Blazor
+    </a>
+</PWAUpdater>
 
 <div class="page">
     <div class="sidebar">
         <NavMenu />
+
+        <div style="text-align: center; margin-bottom: 12px;">
+            <button class="btn btn-secondary btn-sm" @onclick="@(() => { _InitialState = PWAUpdater.States.Hiding; })">
+                CLICK TO HIDE PWAUpdater
+            </button>
+        </div>
     </div>
 
     <main>
@@ -17,3 +30,15 @@
         </article>
     </main>
 </div>
+
+@code {
+    private PWAUpdater.States _InitialState = PWAUpdater.States.Hidden;
+
+    protected override void OnInitialized()
+    {
+        if (this.HostEnv.IsDevelopment())
+        {
+            this._InitialState = PWAUpdater.States.Showing;
+        }
+    }
+}
