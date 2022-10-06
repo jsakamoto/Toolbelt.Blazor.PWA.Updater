@@ -99,6 +99,40 @@ Text                | string | The text that is shown on the notification bar UI
 ButtonCaption       | string | The text that is shown as the caption of the button to trigger updates. The default value is "UPDATE NOW".
 Align               | PWAUpdater.Aligns | The value to specify the position of the notification bar, whether `Top` or `Bottom`. The default value is `Top`.
 EnvironmentsForWork | string | The comma-separated string that specifies environment names that the notification UI should work. If this parameter is an empty string, notification always works regardless of the current environment name, including during development. Usually, notification UI should be a bother during development, so the default value of this parameter is "Production", which doesn't include "Development".
+State (*Bindable)   | PWAUpdater.States | The value to specify or represents the visibility state of the notification bar, whether `Hidden`, `Showing`, `Shown`, or `Hiding`. The default value is `Hidden`.
+StateChanged        | EventCallback<PWAUpdater.States> | The event callback that will be invoked when the `State` parameter value changes.
+ChildContent        | Renderfragment | the content to be rendered as a part of the notification bar.
+
+### How to make the notification bar of `PWAUpdater` visible forcibly
+
+Sometimes developers might want to make the notification bar visible even though any updates of a service worker have not happened in such a case if they are working on customizing the appearance of the notification bar.
+
+In that case, developers can do that by setting the initial value of the `State` parameter of the `PWAUpdater` component to `Showing` temporarily.
+
+```html
+<PWAUpdater State="PWAUpdater.States.Showing"/>
+```
+
+Please don't forget to remove the settings of the `State` parameter before release.
+
+### How to add child contents of the notification bar of `PWAUpdater`
+
+If you want to add custom content into the notification bar of `PWAUpdater` as its child content, you can do that in the usual Blazor programming way. In other words, write markup as a child node of the `<PWAUpdater>` tag.
+
+For example, if you  markup the component like this,
+
+```html
+<PWAUpdater>
+    <a href="https://blazor.net" target="_blank"
+       style="color: var(--pwa-updater-bar-color); margin-left: 26px; flex: 1">
+        about Blazor
+    </a>
+</PWAUpdater>
+```
+
+You will see the screen, like the below picture.
+
+![](https://raw.githubusercontent.com/jsakamoto/Toolbelt.Blazor.PWA.Updater/main/.assets/fig.003.png)
 
 ### CSS custom properties (variables) for the `PWAUpdater` component
 
