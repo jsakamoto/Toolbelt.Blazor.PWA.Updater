@@ -1,3 +1,6 @@
+v.2.0.0.1
+- Improve README - mentioned the CSS isolation
+
 v.2.0.0
 - Add support for Blazor Server
 
