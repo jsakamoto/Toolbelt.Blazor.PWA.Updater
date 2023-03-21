@@ -89,6 +89,38 @@ self.addEventListener('message', event => {
 
 That's all.
 
+### NOTICE: Including CSS style sheet
+
+This package assumes that the application uses Blazor's CSS isolation by default. Usually, this pre-requirement is appropriate. However, unfortunately, some Blazor projects scenario, such as those made by the "empty" project template, are not configured for CSS isolation. In this case, the CSS file of this package will never be loaded in the app, and the PWAUpdater component will not be shown correctly. To resolve this issue, you must include this package's CSS file yourself.
+
+Specifically, you should include the bundled CSS file for the project in the fallback HTML document file, like the following code,
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    ...
+    <!-- 👇 Add this line. -->
+    <link href="{ASSEMBLY NAME}.styles.css" rel="stylesheet" />
+    ....
+```
+
+or include the CSS file for this package individually, like the following code.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    ...
+    <!-- 👇 Add this line. -->
+    <link href="_content/Toolbelt.Blazor.PWA.Updater/Toolbelt.Blazor.PWA.Updater.bundle.scp.css"
+        rel="stylesheet" />
+    ...
+```
+
+See also: https://learn.microsoft.com/aspnet/core/blazor/components/css-isolation
+
+
 ## ⚙️ Configuration
 
 ### Parameters of the `PWAUpdater` component
