@@ -18,10 +18,12 @@ public class PWAUpdaterTests
         switch (platform)
         {
             case Platform.BlazorServer:
-                ctx.Services.TryAddScoped<IHostEnvironment>(_ => new HostEnv(environment));
+                ctx.Services.RemoveAll<IHostEnvironment>();
+                ctx.Services.AddScoped<IHostEnvironment>(_ => new HostEnv(environment));
                 break;
             case Platform.BlazorWebAssembly:
-                ctx.Services.TryAddScoped<IWebAssemblyHostEnvironment>(_ => new WasmHostEnv(environment));
+                ctx.Services.RemoveAll<IWebAssemblyHostEnvironment>();
+                ctx.Services.AddScoped<IWebAssemblyHostEnvironment>(_ => new WasmHostEnv(environment));
                 break;
             default: throw new NotImplementedException();
         }
@@ -33,8 +35,8 @@ public class PWAUpdaterTests
         Platform.BlazorWebAssembly };
 
     private static readonly IEnumerable<IEnumerable<object>> _TestCases1 = _Platfoems.SelectMany(platform => (new object[][] {
-        new object[] {"Production", true },
-        new object[] {"Development", false }, }
+        ["Production", true],
+        ["Development", false], }
     ).Select(pattern => pattern.Prepend(platform).ToArray()));
 
     [TestCaseSource(nameof(_TestCases1))]
@@ -42,25 +44,27 @@ public class PWAUpdaterTests
     {
         // Given
         using var ctx = CreateContext(platform, hostEnv);
-
         var cut = ctx.RenderComponent<PWAUpdater>();
-        cut.Find(".pwa-updater").ClassList.Contains("visible").IsFalse();
+        cut.FindAll(".pwa-updater").Count.Is(0); // Verify that the PWAUpdater will never render anything at first.
 
         // When
         ctx.Services.GetRequiredService<PWAUpdaterService>().OnNextVersionIsWaiting();
 
         // Then
-        cut.Find(".pwa-updater").ClassList.Contains("visible").Is(expectedVisible);
+        if (expectedVisible)
+            cut.WaitForState(() => cut.Find(".pwa-updater").ClassList.Contains("visible"));
+        else
+            cut.FindAll(".pwa-updater").Count.Is(0);
     }
 
     private static readonly IEnumerable<IEnumerable<object>> _TestCases2 = _Platfoems.SelectMany(platform => (new object[][] {
-        new object[] {"Production", "", true },
-        new object[] {"Development", "", true },
-        new object[] {"Production", "Development", false },
-        new object[] {"Development", "Development", true },
-        new object[] {"EnvA", "EnvA,EnvB", true },
-        new object[] {"EnvB", "EnvA, EnvB", true },
-        new object[] {"EnvC", "EnvA,EnvB", false }, }
+        ["Production", "", true],
+        ["Development", "", true],
+        ["Production", "Development", false],
+        ["Development", "Development", true],
+        ["EnvA", "EnvA,EnvB", true],
+        ["EnvB", "EnvA, EnvB", true],
+        ["EnvC", "EnvA,EnvB", false], }
     ).Select(pattern => pattern.Prepend(platform).ToArray()));
 
     [TestCaseSource(nameof(_TestCases2))]
@@ -68,14 +72,16 @@ public class PWAUpdaterTests
     {
         // Given
         using var ctx = CreateContext(platform, hostEnv);
-
         var cut = ctx.RenderComponent<PWAUpdater>(param => param.Add(_ => _.EnvironmentsForWork, envForWork));
-        cut.Find(".pwa-updater").ClassList.Contains("visible").IsFalse();
+        cut.FindAll(".pwa-updater").Count.Is(0); // Verify that the PWAUpdater will never render anything at first.
 
         // When
         ctx.Services.GetRequiredService<PWAUpdaterService>().OnNextVersionIsWaiting();
 
         // Then
-        cut.Find(".pwa-updater").ClassList.Contains("visible").Is(expectedVisible);
+        if (expectedVisible)
+            cut.WaitForState(() => cut.Find(".pwa-updater").ClassList.Contains("visible"));
+        else
+            cut.FindAll(".pwa-updater").Count.Is(0);
     }
 }

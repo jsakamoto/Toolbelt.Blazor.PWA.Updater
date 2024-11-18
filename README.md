@@ -8,7 +8,7 @@ Provide "Update Now" UI and feature to your Blazor PWA that appears when the nex
 
 ### Supported platforms
 
-.NET 6 or later. Both Blazor Server and Blazor Assembly are supported.
+.NET 8, 9, or later. Both Blazor Server and Blazor Assembly are supported.
 
 ## 🤔 Backgrounds
 

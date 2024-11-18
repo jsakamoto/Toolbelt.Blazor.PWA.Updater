@@ -1,4 +1,6 @@
 ﻿@using Microsoft.Extensions.Logging
+@using System.ComponentModel
+
 @implements IDisposable
 @inject IPWAUpdaterService PWAUpdaterService
 @inject ILogger<PWAUpdater> Logger
@@ -45,8 +47,10 @@
     /// </summary>
     public enum Aligns
     {
-        Top,
-        Buttom
+        Top = 0,
+        [Obsolete("It's a typo. Use 'Bottom' instead of 'Buttom'."), EditorBrowsable(EditorBrowsableState.Never)]
+        Buttom = 1,
+        Bottom = 1
     }
 
     /// <summary>
