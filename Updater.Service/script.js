@@ -1,66 +1,60 @@
 "use strict";
 var Toolbelt;
-(function (Toolbelt) {
-    var Blazor;
-    (function (Blazor) {
-        var PWA;
-        (function (PWA) {
-            var Updater;
-            (function (Updater) {
+((Toolbelt) => {
+    ((Blazor) => {
+        ((PWA) => {
+            ((Updater) => {
+                const NULL = null;
                 // Parameters in the <script> tag.
-                const serviceWorkerScriptPath = document.currentScript?.getAttribute("register") || "service-worker.js";
-                const noRegister = document.currentScript?.getAttribute("no-register") !== null;
+                const getAttribute = (name) => document.currentScript?.getAttribute(name);
+                const serviceWorkerScriptPath = getAttribute("register") || "service-worker.js";
+                const noRegister = getAttribute("no-register") !== NULL;
                 // State of the PWA updater
-                let _dotNetObjectRef = null;
-                let iinitialInstallation = false;
-                let waiting = null;
+                let _dotNetObjectRef = NULL;
+                let initialInstallation = false;
+                let waiting = NULL;
                 let resolve = () => { };
                 const waitForReady = new Promise(r => { resolve = r; });
                 const notifyNextVersionIsWaitingToBlazor = async (waitingWorker) => {
+                    if (waitingWorker === NULL)
+                        return;
                     waiting = waitingWorker;
                     await waitForReady;
-                    if (_dotNetObjectRef !== null) {
-                        await _dotNetObjectRef.invokeMethodAsync("OnNextVersionIsWaiting");
-                    }
+                    await _dotNetObjectRef?.invokeMethodAsync("OnNextVersionIsWaiting");
                 };
                 const monitor = (worker) => {
+                    if (worker === NULL)
+                        return;
                     worker.addEventListener('statechange', () => {
                         if (worker.state === 'installed') {
-                            if (!iinitialInstallation)
+                            if (!initialInstallation)
                                 notifyNextVersionIsWaitingToBlazor(worker);
                         }
                         if (worker.state === 'activated') {
-                            if (!iinitialInstallation) {
+                            if (!initialInstallation) {
                                 setTimeout(() => window.location.reload(), 10);
                             }
-                            iinitialInstallation = false;
+                            initialInstallation = false;
                         }
                     });
                 };
-                Updater.handleRegistration = (registration) => {
-                    iinitialInstallation = registration.active === null;
+                const handleRegistration = (registration) => {
+                    initialInstallation = registration.active === NULL;
                     const waiting = registration.waiting;
-                    if (waiting !== null) {
-                        notifyNextVersionIsWaitingToBlazor(waiting);
-                        monitor(waiting);
-                    }
-                    registration.addEventListener('updatefound', () => {
-                        registration.installing !== null && monitor(registration.installing);
-                    });
+                    notifyNextVersionIsWaitingToBlazor(waiting);
+                    monitor(waiting);
+                    Updater.handleRegistration = handleRegistration;
+                    registration.addEventListener('updatefound', () => monitor(registration.installing));
                 };
                 Updater.setToBeReady = (obj) => {
                     _dotNetObjectRef = obj;
                     resolve();
                 };
-                Updater.skipWaiting = () => {
-                    if (waiting === null)
-                        return;
-                    waiting.postMessage({ type: 'SKIP_WAITING' });
-                };
+                Updater.skipWaiting = () => waiting?.postMessage({ type: 'SKIP_WAITING' });
                 if (!noRegister) {
-                    navigator.serviceWorker.register(serviceWorkerScriptPath).then(Updater.handleRegistration);
+                    navigator.serviceWorker.register(serviceWorkerScriptPath).then(handleRegistration);
                 }
-            })(Updater = PWA.Updater || (PWA.Updater = {}));
-        })(PWA = Blazor.PWA || (Blazor.PWA = {}));
-    })(Blazor = Toolbelt.Blazor || (Toolbelt.Blazor = {}));
-})(Toolbelt || (Toolbelt = {}));
+            })(PWA.Updater ??= {});
+        })(Blazor.PWA ??= {});
+    })(Toolbelt.Blazor ??= {});
+})(Toolbelt ??= {});
