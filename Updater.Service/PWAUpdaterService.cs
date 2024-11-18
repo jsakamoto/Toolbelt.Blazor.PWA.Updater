@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
@@ -8,6 +9,7 @@ namespace Toolbelt.Blazor.PWA.Updater.Service;
 internal class PWAUpdaterService : IPWAUpdaterService, IDisposable
 {
     private readonly IServiceProvider _ServiceProvider;
+
     private readonly IJSRuntime _JSRuntime;
 
     private readonly ILogger<PWAUpdaterService> _Logger;
@@ -56,6 +58,7 @@ internal class PWAUpdaterService : IPWAUpdaterService, IDisposable
         }
     }
 
+    [DynamicDependency(nameof(OnNextVersionIsWaiting))]
     public PWAUpdaterService(IServiceProvider serviceProvider, IJSRuntime jSRuntime, ILogger<PWAUpdaterService> logger)
     {
         this._ServiceProvider = serviceProvider;
@@ -79,6 +82,7 @@ internal class PWAUpdaterService : IPWAUpdaterService, IDisposable
 
     public static IEnumerable<(Type, PropertyInfo?)> EnumHostEnvironmentService()
     {
+#pragma warning disable IL2026, IL2075
         foreach (var type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => { try { return asm.GetExportedTypes(); } catch { return Enumerable.Empty<Type>(); } }))
         {
             if (type.FullName == "Microsoft.AspNetCore.Components.WebAssembly.Hosting.IWebAssemblyHostEnvironment")
@@ -90,6 +94,7 @@ internal class PWAUpdaterService : IPWAUpdaterService, IDisposable
                 yield return (type, type.GetProperty("EnvironmentName"));
             }
         }
+#pragma warning restore IL2026, IL2075
     }
 
     public async ValueTask SkipWaitingAsync()
