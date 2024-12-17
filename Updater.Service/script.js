@@ -43,9 +43,9 @@ var Toolbelt;
                     const waiting = registration.waiting;
                     notifyNextVersionIsWaitingToBlazor(waiting);
                     monitor(waiting);
-                    Updater.handleRegistration = handleRegistration;
                     registration.addEventListener('updatefound', () => monitor(registration.installing));
                 };
+                Updater.handleRegistration = handleRegistration;
                 Updater.setToBeReady = (obj) => {
                     _dotNetObjectRef = obj;
                     resolve();
