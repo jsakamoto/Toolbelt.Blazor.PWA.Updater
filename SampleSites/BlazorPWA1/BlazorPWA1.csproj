@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Toolbelt.Blazor.PWA.Updater" Version="3.0.0" />
+    <PackageReference Include="Toolbelt.Blazor.PWA.Updater" Version="3.0.1" />
     <!--<ProjectReference Include="..\..\Updater\Toolbelt.Blazor.PWA.Updater.csproj" />-->
   </ItemGroup>
 
