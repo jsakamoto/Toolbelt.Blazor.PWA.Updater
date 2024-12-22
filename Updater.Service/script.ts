@@ -2,7 +2,6 @@
     invokeMethodAsync(methodName: string, ...args: any[]): Promise<any>;
 }
 
-var Toolbelt: any;
 ((Toolbelt) => {
     ((Blazor) => {
         ((PWA) => {
@@ -13,20 +12,18 @@ var Toolbelt: any;
                 // Parameters in the <script> tag.
                 const getAttribute = (name: string) => document.currentScript?.getAttribute(name);
                 const serviceWorkerScriptPath = getAttribute("register") || "service-worker.js";
-                const noRegister = getAttribute("no-register") !== NULL;
+                const noRegister = getAttribute("no-register");
 
                 // State of the PWA updater
-                let _dotNetObjectRef: IDotNetObjectRef | null = NULL;
                 let initialInstallation = false;
                 let waiting: ServiceWorker | null = NULL;
-                let resolve = () => { };
-                const waitForReady = new Promise<void>(r => { resolve = r; });
+                const waitForDotNetObjReady = Promise.withResolvers<IDotNetObjectRef>();
 
                 const notifyNextVersionIsWaitingToBlazor = async (waitingWorker: ServiceWorker | null) => {
                     if (waitingWorker === NULL) return;
                     waiting = waitingWorker;
-                    await waitForReady;
-                    await _dotNetObjectRef?.invokeMethodAsync("OnNextVersionIsWaiting");
+                    const dotNetObjRef = await waitForDotNetObjReady.promise;
+                    await dotNetObjRef.invokeMethodAsync("OnNextVersionIsWaiting");
                 }
 
                 const monitor = (worker: ServiceWorker | null) => {
@@ -53,9 +50,8 @@ var Toolbelt: any;
                 }
                 Updater.handleRegistration = handleRegistration;
 
-                Updater.setToBeReady = (obj: any) => {
-                    _dotNetObjectRef = obj;
-                    resolve();
+                Updater.setToBeReady = (dotNetObj: IDotNetObjectRef) => {
+                    waitForDotNetObjReady.resolve(dotNetObj);
                 }
 
                 Updater.skipWaiting = () => waiting?.postMessage({ type: 'SKIP_WAITING' });
@@ -67,4 +63,4 @@ var Toolbelt: any;
             })(PWA.Updater ??= {});
         })(Blazor.PWA ??= {});
     })(Toolbelt.Blazor ??= {})
-})(Toolbelt ??= {});
+})((window as any).Toolbelt ??= {});
