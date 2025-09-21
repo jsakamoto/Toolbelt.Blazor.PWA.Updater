@@ -9,7 +9,9 @@ describe('test for PWA Updater script', () => {
         // GIVEN
         const { context, window } = await createContext({
             initialState: {
-                installing: "installing"
+                installing: "installing",
+                waiting: null,
+                active: null
             }
         });
         expect(context.registeredScriptPath).toBe("service-worker.js");
@@ -78,7 +80,9 @@ describe('test for PWA Updater script', () => {
         const { context } = await createContext({
             serviceWorkerScriptPath: "custom-service-worker.js",
             initialState: {
-                installing: "installing"
+                installing: "installing",
+                waiting: null,
+                active: null
             }
         });
         expect(context.registeredScriptPath).toBe("custom-service-worker.js");
@@ -89,7 +93,9 @@ describe('test for PWA Updater script', () => {
         const { context, window, navigator, Toolbelt } = await createContext({
             noRegister: true,
             initialState: {
-                installing: "installing"
+                installing: "installing",
+                waiting: null,
+                active: null
             }
         });
         expect(context.registeredScriptPath).toBeNull();
@@ -167,6 +173,8 @@ describe('test for PWA Updater script', () => {
         // GIVEN
         const { context, window } = await createContext({
             initialState: {
+                installing: null,
+                waiting: null,
                 active: "activated"
             }
         });
@@ -229,6 +237,7 @@ describe('test for PWA Updater script', () => {
         // GIVEN
         const { context, window } = await createContext({
             initialState: {
+                installing: null,
                 waiting: "installed",
                 active: "activated"
             }

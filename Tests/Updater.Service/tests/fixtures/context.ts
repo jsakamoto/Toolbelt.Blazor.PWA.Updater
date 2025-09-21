@@ -13,9 +13,9 @@ export type ContextOptions = {
     serviceWorkerScriptPath?: string,
     noRegister?: boolean,
     initialState?: {
-        installing?: ServiceWorkerState,
-        waiting?: ServiceWorkerState,
-        active?: ServiceWorkerState
+        installing?: ServiceWorkerState | null,
+        waiting?: ServiceWorkerState | null,
+        active?: ServiceWorkerState | null
     }
 };
 
