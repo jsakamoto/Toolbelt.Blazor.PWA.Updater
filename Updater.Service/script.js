@@ -8,6 +8,7 @@
                 const getAttribute = (name) => document.currentScript?.getAttribute(name);
                 const serviceWorkerScriptPath = getAttribute("register") || "service-worker.js";
                 const noRegister = getAttribute("no-register");
+                const detectBotPattern = getAttribute("detect-bot-pattern") || "google|baidu|bingbot|duckduckbot|teoma|slurp|yandex";
                 // State of the PWA updater
                 let initialInstallation = false;
                 let waiting = NULL;
@@ -47,8 +48,8 @@
                     waitForDotNetObjReady.resolve(dotNetObj);
                 };
                 Updater.skipWaiting = () => waiting?.postMessage({ type: 'SKIP_WAITING' });
-                if (!noRegister) {
-                    navigator.serviceWorker.register(serviceWorkerScriptPath).then(handleRegistration);
+                if (!noRegister && !new RegExp(detectBotPattern, "i").test(navigator.userAgent)) {
+                    navigator.serviceWorker?.register(serviceWorkerScriptPath).then(handleRegistration);
                 }
             })(PWA.Updater ??= {});
         })(Blazor.PWA ??= {});

@@ -16,7 +16,10 @@ export type ContextOptions = {
         installing?: ServiceWorkerState | null,
         waiting?: ServiceWorkerState | null,
         active?: ServiceWorkerState | null
-    }
+    },
+    detectBotPattern?: string,
+    isBot?: boolean,
+    userAgent?: string
 };
 
 export type InvokeHistory = {
@@ -54,16 +57,24 @@ export const createContext = async (options?: ContextOptions): Promise<{ context
     const document: any = {
         currentScript: {
             getAttribute: (name: string) => {
-                if (name === "no-register") return options?.noRegister;
-                else if (name === "register") return options?.serviceWorkerScriptPath;
-                else return undefined;
+                switch (name) {
+                    case "no-register": return options?.noRegister;
+                    case "register": return options?.serviceWorkerScriptPath;
+                    case "detect-bot-pattern": return options?.detectBotPattern;
+                    default: return undefined;
+                }
             }
         }
     };
 
     const navigator: any = {
+        userAgent: options?.userAgent ?? (options?.isBot ?
+            "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.127 Mobile Safari/537.36 (compatible; Google-InspectionTool/1.0)" :
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0"),
         serviceWorker: {
             register: (scriptPath: string) => {
+                if (options?.isBot) return Promise.reject();
+
                 context.registeredScriptPath = scriptPath;
 
                 const { installing, waiting, active } = (options?.initialState ?? {});

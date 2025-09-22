@@ -279,4 +279,28 @@ describe('test for PWA Updater script', () => {
         expect(pageReloaded).toBe(true);
         expect(context.dotNetObj.invokeHistories).toEqual(["OnNextVersionIsWaiting"]);
     })
+
+    test('nothing happens when a bot is crawling', async () => {
+        // GIVEN & WHEN
+        const { context } = await createContext({ isBot: true });
+
+        // THEN: verify the registration state
+        expect(context.registration.installing).toBeNull();
+        expect(context.registration.waiting).toBeNull();
+        expect(context.registration.active).toBeNull();
+    });
+
+    test('nothing happens for custom bots when a custom bot pattern is specified', async () => {
+        // GIVEN & WHEN
+        const { context } = await createContext({
+            isBot: true,
+            userAgent: "Mozilla/5.0 (compatible; CustomBot/1.0; +http://www.example.com/bot.html)",
+            detectBotPattern: "custombot"
+        });
+
+        // THEN: verify the registration state
+        expect(context.registration.installing).toBeNull();
+        expect(context.registration.waiting).toBeNull();
+        expect(context.registration.active).toBeNull();
+    });
 });
