@@ -49,7 +49,7 @@
                 };
                 Updater.skipWaiting = () => waiting?.postMessage({ type: 'SKIP_WAITING' });
                 if (!noRegister && !new RegExp(detectBotPattern, "i").test(navigator.userAgent)) {
-                    navigator.serviceWorker?.register(serviceWorkerScriptPath).then(handleRegistration);
+                    navigator.serviceWorker?.register(serviceWorkerScriptPath, { updateViaCache: 'none' }).then(handleRegistration);
                 }
             })(PWA.Updater ??= {});
         })(Blazor.PWA ??= {});
