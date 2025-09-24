@@ -208,6 +208,29 @@ By default, this package will load the "service-worker.js" JavaScript file as a 
 </html>
 ```
 
+### Skip service worker registration for crawlers (bot detection)
+
+Some search engines and AI crawlers execute JavaScript but run in environments where `navigator.serviceWorker.register()` is rejected. These rejections can surface as errors in Application Performance Monitoring (APM) tools. To avoid this noise, the script detects crawler access by testing the `navigator.userAgent` string against a regular expression. When a match is found, service worker registration is skipped.
+
+The default regular expression pattern is:
+
+```
+google|baidu|bingbot|duckduckbot|teoma|slurp|yandex
+```
+
+You can customize this pattern by setting the `detect-bot-pattern` attribute on the script tag that loads `_content/Toolbelt.Blazor.PWA.Updater.Service/script.min.js`.
+
+```html
+<!-- 📜 This is the "index.html" file of your Blazor PWA. -->
+  ...
+  <!-- 👇 Set "detect-bot-pattern" to specify a custom regular expression for detecting bot access. -->
+  <script src="_content/Toolbelt.Blazor.PWA.Updater.Service/script.min.js"
+          detect-bot-pattern="foo|bar">
+  </script> 
+</body>
+</html>
+```
+
 ### Customize the process of registering a service worker
 
 Sometimes, you may have to do something in a service worker registering process. In this case, you can add the `no-register` attribute to the script element loading the JavaScript file of the "PWA Updater" to prevent loading the service worker's script file by that automatically.
@@ -223,12 +246,13 @@ If you do that, please manually invoke the `Toolbelt.Blazor.PWA.Updater.handleRe
   </script>
 
   <script>
-    navigator.serviceWorker.register('service-worker.js').then(registration => {
-      ...
-      // 👇 Invoke this manually.
-      Toolbelt.Blazor.PWA.Updater.handleRegistration(registration);
-      ...
-    });
+    navigator.serviceWorker.register('service-worker.js', {updateViaCache: 'none'})
+      .then(registration => {
+        ...
+        // 👇 Invoke this manually.
+        Toolbelt.Blazor.PWA.Updater.handleRegistration(registration);
+        ...
+      });
   </script>
 </body>
 </html>
