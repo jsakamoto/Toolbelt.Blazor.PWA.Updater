@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>3.0.1</Version>
-    <Copyright>Copyright © 2022-2024 J.Sakamoto, Mozilla Public License 2.0</Copyright>
+    <Version>3.1.0</Version>
+    <Copyright>Copyright © 2022-2025 J.Sakamoto, Mozilla Public License 2.0</Copyright>
     <Authors>J.Sakamoto</Authors>
     <PackageProjectUrl>https://github.com/jsakamoto/Toolbelt.Blazor.PWA.Updater/</PackageProjectUrl>
     <Description>Provide "Update Now" feature to your Blazor PWA that notify to your components when the next version of one is available.</Description>
