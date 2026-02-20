@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/README/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Sample Sites/">
+    <Project Path="SampleSites/BlazorPWA1/BlazorPWA1.csproj" />
+    <Project Path="SampleSites/BlazorServerPWA1/BlazorServerPWA1.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Updater.Service/Toolbelt.Blazor.PWA.Updater.Service.Test.csproj" />
+    <Project Path="Tests/Updater/Toolbelt.Blazor.PWA.Updater.Test.csproj" />
+  </Folder>
+  <Project Path="Updater.Service/Toolbelt.Blazor.PWA.Updater.Service.csproj" />
+  <Project Path="Updater/Toolbelt.Blazor.PWA.Updater.csproj" />
+</Solution>

@@ -44,7 +44,7 @@ public class PWAUpdaterTests
     {
         // Given
         using var ctx = CreateContext(platform, hostEnv);
-        var cut = ctx.RenderComponent<PWAUpdater>();
+        var cut = ctx.Render<PWAUpdater>();
         cut.FindAll(".pwa-updater").Count.Is(0); // Verify that the PWAUpdater will never render anything at first.
 
         // When
@@ -72,7 +72,7 @@ public class PWAUpdaterTests
     {
         // Given
         using var ctx = CreateContext(platform, hostEnv);
-        var cut = ctx.RenderComponent<PWAUpdater>(param => param.Add(_ => _.EnvironmentsForWork, envForWork));
+        var cut = ctx.Render<PWAUpdater>(param => param.Add(_ => _.EnvironmentsForWork, envForWork));
         cut.FindAll(".pwa-updater").Count.Is(0); // Verify that the PWAUpdater will never render anything at first.
 
         // When

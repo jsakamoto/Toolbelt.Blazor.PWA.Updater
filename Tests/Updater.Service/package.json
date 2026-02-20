@@ -12,6 +12,6 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.0.0"
   }
 }
