@@ -10,9 +10,9 @@ namespace Toolbelt.Blazor.PWA.Updater.Test;
 
 public class PWAUpdaterTests
 {
-    static Bunit.TestContext CreateContext(Platform platform, string environment)
+    static BunitContext CreateContext(Platform platform, string environment)
     {
-        var ctx = new Bunit.TestContext();
+        var ctx = new BunitContext();
         ctx.Services.TryAddScoped<PWAUpdaterService>();
         ctx.Services.TryAddScoped<IPWAUpdaterService>(sp => sp.GetRequiredService<PWAUpdaterService>());
         switch (platform)
