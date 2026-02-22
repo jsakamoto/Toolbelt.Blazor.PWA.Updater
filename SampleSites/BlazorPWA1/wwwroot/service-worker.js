@@ -2,4 +2,9 @@
 // This is because caching would make development more difficult (changes would not
 // be reflected on the first load after each change).
 self.addEventListener('fetch', () => { });
-self.addEventListener('message', event => { if (event.data?.type === 'SKIP_WAITING') self.skipWaiting() });
+self.addEventListener('message', async (event) => {
+    if (event.data?.type === 'SKIP_WAITING') {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        self.skipWaiting()
+    }
+});

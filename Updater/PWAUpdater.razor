@@ -1,4 +1,4 @@
-﻿@using Microsoft.Extensions.Logging
+@using Microsoft.Extensions.Logging
 @using System.ComponentModel
 
 @implements IDisposable
@@ -7,7 +7,7 @@
 
 @if (this.State != States.Hidden)
 {
-    <div class="@("pwa-updater" + (this.State == States.Shown ? " visible" : "") + (this.Align == Aligns.Top ? " align-top" : " align-bottom"))">
+    <div class="@GetCssClass()">
         @ChildContent
         <span>@this.Text</span>
         <button @onclick="OnClickUpdateNowAsync" class="pwa-updater-updatenow-button">@this.ButtonCaption</button>
@@ -16,7 +16,6 @@
 }
 
 @code {
-
     /// <summary>
     /// The state of visibility of the PWAUpdater component.
     /// </summary>
@@ -84,6 +83,30 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    private bool _waitForReload = false;
+
+    private string GetCssClass()
+    {
+        var cssClass = "pwa-updater";
+        if (this.State == States.Shown)
+        {
+            cssClass += " visible";
+        }
+        cssClass += this.Align switch
+        {
+            Aligns.Top => " align-top",
+#pragma warning disable CS0618 // Type or member is obsolete
+            Aligns.Buttom or Aligns.Bottom => " align-bottom",
+#pragma warning restore CS0618 // Type or member is obsolete
+            _ => ""
+        };
+        if (this._waitForReload)
+        {
+            cssClass += " waiting-for-reload";
+        }
+        return cssClass;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -148,6 +171,7 @@
 
     private async Task OnClickUpdateNowAsync()
     {
+        _waitForReload = true;
         await this.PWAUpdaterService.SkipWaitingAsync();
     }
 

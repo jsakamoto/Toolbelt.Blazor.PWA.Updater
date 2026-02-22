@@ -1,10 +1,11 @@
-﻿.pwa-updater {
+.pwa-updater {
     --pwa-updater-font-size: 13px;
     --pwa-updater-font-family: sans-serif;
     --pwa-updater-bar-height: 32px;
     --pwa-updater-bar-color: white;
     --pwa-updater-bar-backcolor: darkorange;
     --pwa-updater-bar-z-index: 10;
+    --pwa-updater-updatenowbutton-height: calc(var(--pwa-updater-bar-height) - 4px);
 }
 
 .pwa-updater {
@@ -43,14 +44,15 @@
     }
 
 .pwa-updater-updatenow-button {
+    position: relative;
     font-size: calc(var(--pwa-updater-font-size)* 0.9);
     font-family: var(--pwa-updater-font-family);
     background-color: transparent;
     color: var(--pwa-updater-bar-color);
     border: solid 2px #ffffff80;
     border-radius: 4px;
-    height: calc(var(--pwa-updater-bar-height) - 4px);
-    line-height: calc(var(--pwa-updater-bar-height) - 4px - 2px);
+    height: var(--pwa-updater-updatenowbutton-height);
+    line-height: calc(var(--pwa-updater-updatenowbutton-height) - 2px);
     padding: 0 8px;
     transition: background-color linear 0.2s;
     margin: 0 0 0 8px;
@@ -59,6 +61,35 @@
     .pwa-updater-updatenow-button:hover {
         background-color: #ffffff40;
     }
+
+.pwa-updater.waiting-for-reload .pwa-updater-updatenow-button {
+    cursor: wait;
+    color: transparent;
+}
+
+    .pwa-updater.waiting-for-reload .pwa-updater-updatenow-button::after {
+        --size: calc(var(--pwa-updater-updatenowbutton-height) - 12px);
+        content: "";
+        width: var(--size);
+        height: var(--size);
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        border: solid 2px var(--pwa-updater-bar-color);
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: --pwa-updater-waiting-for-reload 1.5s linear 0s infinite;
+    }
+
+@keyframes --pwa-updater-waiting-for-reload {
+    0% {
+        transform: rotate(45deg)
+    }
+
+    100% {
+        transform: rotate(405deg)
+    }
+}
 
 .pwa-updater-close-button {
     position: absolute;

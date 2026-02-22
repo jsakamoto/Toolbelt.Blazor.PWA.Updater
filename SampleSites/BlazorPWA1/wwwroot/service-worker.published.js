@@ -7,7 +7,12 @@ self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 
 // ADD THIS MESSAGE HANDLER.
-self.addEventListener('message', event => { if (event.data?.type === 'SKIP_WAITING') self.skipWaiting() });
+self.addEventListener('message', async (event) => {
+    if (event.data?.type === 'SKIP_WAITING') {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        self.skipWaiting()
+    }
+});
 
 const cacheNamePrefix = 'offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
