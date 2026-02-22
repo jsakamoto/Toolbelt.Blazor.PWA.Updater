@@ -10,6 +10,7 @@
     <BlazorWasmPrerendering>enable</BlazorWasmPrerendering>
     <BlazorWasmPrerenderingMode>Static</BlazorWasmPrerenderingMode>
     <BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
 
   <ItemGroup>
