@@ -1,3 +1,7 @@
+v.3.2.0
+- Improved: Add support for .NET 10.0
+- Improved: Bot detection patterns are updated to include more recent crawler user agents. 
+
 v.3.1.0
 - Improved: Disable caching of service worker files to ensure the latest update is applied.
 - Improved: Avoid registering the service worker for crawler user agents to prevent exceptions. (Issue #25)
