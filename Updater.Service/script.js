@@ -4,11 +4,12 @@
         ((PWA) => {
             ((Updater) => {
                 const NULL = null;
+                const navi = navigator;
                 // Parameters in the <script> tag.
                 const getAttribute = (name) => document.currentScript?.getAttribute(name);
                 const serviceWorkerScriptPath = getAttribute("register") || "service-worker.js";
                 const noRegister = getAttribute("no-register");
-                const detectBotPattern = getAttribute("detect-bot-pattern") || "google|baidu|bingbot|duckduckbot|teoma|slurp|yandex";
+                const detectBotPattern = getAttribute("detect-bot-pattern") || "google|baidu|bingbot|duckduckbot|teoma|slurp|yandex|toutiao|bytespider|applebot";
                 // State of the PWA updater
                 let initialInstallation = false;
                 let waiting = NULL;
@@ -48,8 +49,8 @@
                     waitForDotNetObjReady.resolve(dotNetObj);
                 };
                 Updater.skipWaiting = () => waiting?.postMessage({ type: 'SKIP_WAITING' });
-                if (!noRegister && !new RegExp(detectBotPattern, "i").test(navigator.userAgent)) {
-                    navigator.serviceWorker?.register(serviceWorkerScriptPath, { updateViaCache: 'none' }).then(handleRegistration);
+                if (!noRegister && !new RegExp(detectBotPattern, "i").test(navi.userAgent)) {
+                    navi.serviceWorker?.register(serviceWorkerScriptPath, { updateViaCache: 'none' }).then(handleRegistration);
                 }
             })(PWA.Updater ??= {});
         })(Blazor.PWA ??= {});
